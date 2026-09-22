@@ -128,3 +128,131 @@ The functional requirements define the main actions and capabilities that StudyS
 **FR-605:** If a study plan cannot be generated, the system shall inform the student that generation was unsuccessful rather than displaying an incomplete plan.
 
 **FR-606:** If required academic or availability information is missing, the system shall inform the student of the missing information before attempting to generate a study plan.
+
+---
+
+## 4. User Stories and Acceptance Criteria
+
+### US-01: User Account Registration
+
+**User Story:**  
+As a student, I want to create an account, so that I can access and manage my academic information.
+
+**Acceptance Criteria:**
+
+**Scenario 1 – Successful Registration**
+- **Given** a student provides all required account information,
+- **When** the student submits the registration form,
+- **Then** the system shall create the account and allow the student to proceed to the application.
+
+**Scenario 2 – Missing Required Information**
+- **Given** a student has not provided all required account information,
+- **When** the student attempts to submit the registration form,
+- **Then** the system shall reject the registration and identify the missing required information.
+
+### US-02: User Login
+
+**User Story:**  
+As a registered student, I want to log in to my account, so that I can access my courses, academic tasks, and study plans.
+
+**Acceptance Criteria:**
+
+**Scenario 1 – Successful Login**
+- **Given** a registered student provides valid login credentials,
+- **When** the student submits the login request,
+- **Then** the system shall authenticate the student and provide access to their account.
+
+**Scenario 2 – Invalid Login**
+- **Given** a student provides invalid login credentials,
+- **When** the student submits the login request,
+- **Then** the system shall deny access and display an appropriate error message.
+
+### US-03: Course Management
+
+**User Story:**  
+As a student, I want to manage my courses, so that I can organize my academic responsibilities by course.
+
+**Acceptance Criteria:**
+
+**Scenario 1 – Add a Course**
+- **Given** an authenticated student provides the required course information,
+- **When** the student adds the course,
+- **Then** the system shall save the course and make it available in the student's course list.
+
+**Scenario 2 – Missing Course Information**
+- **Given** an authenticated student has not provided required course information,
+- **When** the student attempts to add the course,
+- **Then** the system shall reject the request and identify the missing required information.
+
+### US-04: Assignment and Exam Management
+
+**User Story:**  
+As a student, I want to manage my assignments and exams, so that I can keep track of my academic responsibilities and deadlines.
+
+**Acceptance Criteria:**
+
+**Scenario 1 – Add an Academic Task**
+- **Given** an authenticated student provides the required information for an assignment or exam,
+- **When** the student adds the academic task,
+- **Then** the system shall save the task and associate it with the selected course.
+
+**Scenario 2 – Missing Required Task Information**
+- **Given** an authenticated student has not provided all required information for an assignment or exam,
+- **When** the student attempts to add the academic task,
+- **Then** the system shall reject the request and identify the missing required information.
+
+### US-05: Study Availability
+
+**User Story:**  
+As a student, I want to enter and manage my available study time, so that my study plans can fit my schedule.
+
+**Acceptance Criteria:**
+
+**Scenario 1 – Add Study Availability**
+- **Given** an authenticated student provides a valid day and study time period,
+- **When** the student saves their availability,
+- **Then** the system shall store the study availability for use in study planning.
+
+**Scenario 2 – Invalid Study Availability**
+- **Given** an authenticated student provides incomplete or invalid study availability,
+- **When** the student attempts to save it,
+- **Then** the system shall reject the request and inform the student that the availability must be corrected.
+
+### US-06: Dashboard and Calendar
+
+**User Story:**  
+As a student, I want to view my academic responsibilities through a dashboard and calendar, so that I can see upcoming assignments, exams, and deadlines in an organized way.
+
+**Acceptance Criteria:**
+
+**Scenario 1 – View Academic Schedule**
+- **Given** an authenticated student has saved assignments or exams,
+- **When** the student opens the dashboard or calendar,
+- **Then** the system shall display the student's upcoming academic tasks according to their deadlines.
+
+**Scenario 2 – No Academic Tasks**
+- **Given** an authenticated student has no saved assignments or exams,
+- **When** the student opens the dashboard or calendar,
+- **Then** the system shall display the academic view without upcoming tasks and shall not display nonexistent academic responsibilities.
+
+### US-07: AI Study Plan Generation
+
+**User Story:**  
+As a student, I want to generate a personalized study plan based on my academic workload and available study time, so that I can better organize and prioritize my study sessions.
+
+**Acceptance Criteria:**
+
+**Scenario 1 – Successful Study Plan Generation**
+- **Given** an authenticated student has upcoming academic tasks with deadlines, estimated difficulty, estimated time requirements, and available study time,
+- **When** the student requests a personalized study plan,
+- **Then** the system shall generate and display a study plan containing suggested academic tasks and study periods.
+
+**Scenario 2 – Missing Required Information**
+- **Given** an authenticated student is missing academic task information or study availability required for study planning,
+- **When** the student requests a personalized study plan,
+- **Then** the system shall not attempt to generate the plan and shall inform the student of the missing information.
+
+**Scenario 3 – Study Plan Generation Failure**
+- **Given** an authenticated student has provided the required study-planning information,
+- **When** the study plan cannot be successfully generated,
+- **Then** the system shall inform the student that study plan generation was unsuccessful and shall not display an incomplete plan.
