@@ -256,3 +256,41 @@ As a student, I want to generate a personalized study plan based on my academic 
 - **Given** an authenticated student has provided the required study-planning information,
 - **When** the study plan cannot be successfully generated,
 - **Then** the system shall inform the student that study plan generation was unsuccessful and shall not display an incomplete plan.
+
+---
+
+## 5. Non-Functional Requirements
+
+The following non-functional requirements define measurable quality, performance, security, reliability, and usability expectations for StudySync AI.
+
+### 5.1 Performance
+
+**NFR-01:** The system shall display the student's dashboard within 3 seconds under normal operating conditions.
+
+**NFR-02:** The system shall display saved course, assignment, exam, and calendar information within 3 seconds of a student request under normal operating conditions.
+
+**NFR-03:** A request to generate a personalized study plan shall either return a result or report a generation failure within 10 seconds.
+
+### 5.2 Security and Privacy
+
+**NFR-04:** All communication involving authentication information or student academic data shall be transmitted through an encrypted HTTPS connection.
+
+**NFR-05:** Student passwords shall not be stored or displayed in readable plain-text form.
+
+**NFR-06:** The system shall prevent an authenticated student from accessing another student's private account information, academic tasks, availability, or generated study plans.
+
+### 5.3 Reliability and AI Failure Handling
+
+**NFR-07:** If the AI study plan service fails or does not return a response within 10 seconds, the system shall display an error message without causing the application to become unusable.
+
+**NFR-08:** A failure of the AI study plan feature shall not prevent the student from accessing their saved courses, assignments, exams, calendar, or study availability.
+
+**NFR-09:** The system shall preserve previously saved student academic information when a study plan generation request fails.
+
+### 5.4 Usability and Accessibility
+
+**NFR-10:** The application interface shall render without horizontal scrolling on screen widths from 320 pixels to 1920 pixels.
+
+**NFR-11:** Text and interactive interface elements shall meet WCAG 2.1 Level AA contrast requirements, including a minimum contrast ratio of 4.5:1 for normal text.
+
+**NFR-12:** All primary interactive controls required to manage courses, assignments, exams, availability, and study plans shall be accessible using keyboard navigation.
