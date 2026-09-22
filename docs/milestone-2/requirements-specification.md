@@ -294,3 +294,44 @@ The following non-functional requirements define measurable quality, performance
 **NFR-11:** Text and interactive interface elements shall meet WCAG 2.1 Level AA contrast requirements, including a minimum contrast ratio of 4.5:1 for normal text.
 
 **NFR-12:** All primary interactive controls required to manage courses, assignments, exams, availability, and study plans shall be accessible using keyboard navigation.
+
+---
+
+## 6. Requirements Diagram
+
+The following use case diagram represents the primary interactions between a student and StudySync AI. Each use case corresponds to a user story defined in Section 4.
+
+```mermaid
+flowchart LR
+    Student([Student])
+
+    subgraph StudySync_AI["StudySync AI"]
+        UC01["UC-01: Register Account"]
+        UC02["UC-02: Log In"]
+        UC03["UC-03: Manage Courses"]
+        UC04["UC-04: Manage Assignments and Exams"]
+        UC05["UC-05: Manage Study Availability"]
+        UC06["UC-06: View Dashboard and Calendar"]
+        UC07["UC-07: Generate AI Study Plan"]
+    end
+
+    Student --> UC01
+    Student --> UC02
+    Student --> UC03
+    Student --> UC04
+    Student --> UC05
+    Student --> UC06
+    Student --> UC07
+```
+
+### 6.1 Use Case to User Story Mapping
+
+| Use Case | Description | User Story |
+|---|---|---|
+| UC-01 | Register Account | US-01 |
+| UC-02 | Log In | US-02 |
+| UC-03 | Manage Courses | US-03 |
+| UC-04 | Manage Assignments and Exams | US-04 |
+| UC-05 | Manage Study Availability | US-05 |
+| UC-06 | View Dashboard and Calendar | US-06 |
+| UC-07 | Generate AI Study Plan | US-07 |
