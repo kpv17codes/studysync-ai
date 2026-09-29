@@ -29,12 +29,11 @@ The initial version of StudySync AI will include:
 - User account registration and login
 - Course management
 - Assignment and exam management
-- Deadline and priority tracking
+- Deadline tracking
 - Academic dashboard
 - Calendar-based organization of academic tasks
 - Entry and management of available study time
 - AI-generated personalized study plans
-- Study progress tracking
 - Handling of unsuccessful AI study-plan generation
 
 ### 1.4 Out-of-Scope Capabilities
@@ -127,7 +126,7 @@ The functional requirements define the main actions and capabilities that StudyS
 
 **FR-605:** If a study plan cannot be generated, the system shall inform the student that generation was unsuccessful rather than displaying an incomplete plan.
 
-**FR-606:** If required academic or availability information is missing, the system shall inform the student of the missing information before attempting to generate a study plan.
+FR-606: The system shall generate a study plan only when 100% of the required planning information is available. Required information shall include each upcoming task's deadline, estimated difficulty, estimated time required, and at least one available study period. If any required information is missing, the system shall identify the missing information and shall not attempt to generate a study plan.
 
 ---
 
@@ -248,9 +247,10 @@ As a student, I want to generate a personalized study plan based on my academic 
 - **Then** the system shall generate and display a study plan containing suggested academic tasks and study periods.
 
 **Scenario 2 – Missing Required Information**
-- **Given** an authenticated student is missing academic task information or study availability required for study planning,
+
+- **Given** an authenticated student has an upcoming task missing a deadline, estimated difficulty, or estimated time required, or the student has not entered at least one available study period,
 - **When** the student requests a personalized study plan,
-- **Then** the system shall not attempt to generate the plan and shall inform the student of the missing information.
+- **Then** the system shall identify the missing information and shall not attempt to generate the plan.
 
 **Scenario 3 – Study Plan Generation Failure**
 - **Given** an authenticated student has provided the required study-planning information,
@@ -265,9 +265,9 @@ The following non-functional requirements define measurable quality, performance
 
 ### 5.1 Performance
 
-**NFR-01:** The system shall display the student's dashboard within 3 seconds under normal operating conditions.
+NFR-01: The system shall display the student's dashboard within 3 seconds for a student account containing up to 100 saved academic tasks.
 
-**NFR-02:** The system shall display saved course, assignment, exam, and calendar information within 3 seconds of a student request under normal operating conditions.
+NFR-02: The system shall display saved course, task, and calendar information within 3 seconds for a student account containing up to 100 saved academic tasks.
 
 **NFR-03:** A request to generate a personalized study plan shall either return a result or report a generation failure within 10 seconds.
 
