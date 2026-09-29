@@ -116,6 +116,8 @@ The functional requirements define the main actions and capabilities that StudyS
 
 ### 3.6 AI Study Plan Generation
 
+**AI Planning Readiness:** Because the AI feature generates personalized study plans rather than classification predictions, StudySync AI evaluates planning readiness based on required input completeness rather than a prediction confidence score. A request is considered ready for generation when 100% of the required planning information defined in FR-606 is available. Requests below this threshold shall follow the missing-information fallback behavior defined in FR-606.
+
 **FR-601:** The system shall allow an authenticated student to request a personalized study plan.
 
 **FR-602:** The system shall use the student's upcoming academic tasks, deadlines, estimated difficulty, estimated time requirements, and available study time when generating a personalized study plan.
