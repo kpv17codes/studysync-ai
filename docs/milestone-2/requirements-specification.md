@@ -389,3 +389,58 @@ flowchart TD
     O --> E
     P --> E
 ```
+---
+
+## 7. Requirements Traceability Matrix
+
+The Requirements Traceability Matrix (RTM) connects the StudySync AI use cases, functional requirements, non-functional requirements, and user stories. This matrix ensures that the defined requirements are traceable to the user needs they support.
+
+### 7.1 Functional Requirements Traceability
+
+| Use Case | Functional Requirement | User Story |
+|---|---|---|
+| UC-01 | FR-101 | US-01 |
+| UC-02 | FR-102 | US-02 |
+| UC-02 | FR-103 | US-02 |
+| UC-02 | FR-104 | US-02 |
+| UC-03 | FR-201 | US-03 |
+| UC-03 | FR-202 | US-03 |
+| UC-03 | FR-203 | US-03 |
+| UC-03 | FR-204 | US-03 |
+| UC-04 | FR-301 | US-04 |
+| UC-04 | FR-302 | US-04 |
+| UC-04 | FR-303 | US-04 |
+| UC-04 | FR-304 | US-04 |
+| UC-04 | FR-305 | US-04 |
+| UC-04 | FR-306 | US-04 |
+| UC-04 | FR-307 | US-04 |
+| UC-05 | FR-401 | US-05 |
+| UC-05 | FR-402 | US-05 |
+| UC-05 | FR-403 | US-05 |
+| UC-06 | FR-501 | US-06 |
+| UC-06 | FR-502 | US-06 |
+| UC-06 | FR-503 | US-06 |
+| UC-06 | FR-504 | US-06 |
+| UC-07 | FR-601 | US-07 |
+| UC-07 | FR-602 | US-07 |
+| UC-07 | FR-603 | US-07 |
+| UC-07 | FR-604 | US-07 |
+| UC-07 | FR-605 | US-07 |
+| UC-07 | FR-606 | US-07 |
+
+### 7.2 Non-Functional Requirements Traceability
+
+| NFR | Related Use Case(s) | Related User Story/Stories |
+|---|---|---|
+| NFR-01 | UC-06 | US-06 |
+| NFR-02 | UC-03, UC-04, UC-06 | US-03, US-04, US-06 |
+| NFR-03 | UC-07 | US-07 |
+| NFR-04 | UC-01–UC-07 | US-01–US-07 |
+| NFR-05 | UC-01, UC-02 | US-01, US-02 |
+| NFR-06 | UC-02–UC-07 | US-02–US-07 |
+| NFR-07 | UC-07 | US-07 |
+| NFR-08 | UC-03–UC-07 | US-03–US-07 |
+| NFR-09 | UC-07 | US-07 |
+| NFR-10 | UC-01–UC-07 | US-01–US-07 |
+| NFR-11 | UC-01–UC-07 | US-01–US-07 |
+| NFR-12 | UC-03–UC-07 | US-03–US-07 |
