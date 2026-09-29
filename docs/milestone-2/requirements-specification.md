@@ -335,3 +335,57 @@ flowchart LR
 | UC-05 | Manage Study Availability | US-05 |
 | UC-06 | View Dashboard and Calendar | US-06 |
 | UC-07 | Generate AI Study Plan | US-07 |
+
+### 6.2 User Journey / Flowchart
+
+The following flowchart represents a student's primary journey through StudySync AI, including the decision points involved in generating a personalized study plan.
+
+```mermaid
+flowchart TD
+    A([Student accesses StudySync AI])
+    B{Has an account?}
+    C[Register account]
+    D[Log in]
+    E[View dashboard and calendar]
+    F[Manage courses]
+    G[Manage assignments and exams]
+    H[Manage study availability]
+    I[Request personalized study plan]
+    J{Required study-planning information available?}
+    K[Inform student of missing information]
+    L[Attempt to generate personalized study plan]
+    M{Study plan generated successfully?}
+    N[Display personalized study plan]
+    O[Inform student that generation was unsuccessful]
+    P([Continue managing academic responsibilities])
+
+    A --> B
+    B -->|No| C
+    C --> D
+    B -->|Yes| D
+    D --> E
+
+    E --> F
+    E --> G
+    E --> H
+
+    F --> E
+    G --> E
+    H --> E
+
+    E --> I
+    I --> J
+
+    J -->|No| K
+    K --> E
+
+    J -->|Yes| L
+    L --> M
+
+    M -->|Yes| N
+    M -->|No| O
+
+    N --> P
+    O --> E
+    P --> E
+```
