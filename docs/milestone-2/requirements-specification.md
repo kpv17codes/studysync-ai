@@ -126,7 +126,7 @@ The functional requirements define the main actions and capabilities that StudyS
 
 **FR-605:** If a study plan cannot be generated, the system shall inform the student that generation was unsuccessful rather than displaying an incomplete plan.
 
-FR-606: The system shall generate a study plan only when 100% of the required planning information is available. Required information shall include each upcoming task's deadline, estimated difficulty, estimated time required, and at least one available study period. If any required information is missing, the system shall identify the missing information and shall not attempt to generate a study plan.
+**FR-606**: The system shall generate a study plan only when 100% of the required planning information is available. Required information shall include each upcoming task's deadline, estimated difficulty, estimated time required, and at least one available study period. If any required information is missing, the system shall identify the missing information and shall not attempt to generate a study plan.
 
 ---
 
@@ -265,9 +265,9 @@ The following non-functional requirements define measurable quality, performance
 
 ### 5.1 Performance
 
-NFR-01: The system shall display the student's dashboard within 3 seconds for a student account containing up to 100 saved academic tasks.
+**NFR-01**: The system shall display the student's dashboard within 3 seconds for a student account containing up to 100 saved academic tasks.
 
-NFR-02: The system shall display saved course, task, and calendar information within 3 seconds for a student account containing up to 100 saved academic tasks.
+**NFR-02**: The system shall display saved course, task, and calendar information within 3 seconds for a student account containing up to 100 saved academic tasks.
 
 **NFR-03:** A request to generate a personalized study plan shall either return a result or report a generation failure within 10 seconds.
 
