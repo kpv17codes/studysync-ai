@@ -132,7 +132,7 @@ classDiagram
         +generate(List~AcademicTask~ tasks, List~StudyAvailability~ availability) StudyPlan
     }
 
-    User "1" *-- "0..*" Course : owns
+    User "1" --> "0..*" Course : manages
     Course "1" *-- "0..*" AcademicTask : contains
     User "1" *-- "0..*" StudyAvailability : defines
     User "1" *-- "0..*" StudyPlan : receives
@@ -144,6 +144,8 @@ classDiagram
     StudyPlanService --> AIStudyPlanner : requests plan
 
     AIStudyPlanner <|.. OpenAIStudyPlanner : implements
+
+    TaskService ..> AcademicTask : creates and updates
 ```
 
 #### Class Diagram Description
