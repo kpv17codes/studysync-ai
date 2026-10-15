@@ -378,3 +378,92 @@ A task begins in the Not Started state when it is created. The student can move 
 Overdue tasks can still be worked on and completed. Students can also reopen completed tasks if additional work is needed.
 
 Deleting a task ends its lifecycle, regardless of its current state.
+
+
+### Entity Relationship Diagram (ERD)
+
+The following ERD shows the proposed PostgreSQL database structure for StudySync AI. It includes student accounts, courses, academic tasks, study availability, generated study plans, and individual study-plan entries.
+
+```mermaid
+erDiagram
+    USERS {
+        int user_id PK
+        string name
+        string email UK
+        string password_hash
+    }
+
+    COURSES {
+        int course_id PK
+        int user_id FK
+        string name
+        string code
+    }
+
+    ACADEMIC_TASKS {
+        int task_id PK
+        int course_id FK
+        string title
+        string task_type
+        date deadline
+        int difficulty
+        float estimated_hours
+        string status
+    }
+
+    STUDY_AVAILABILITY {
+        int availability_id PK
+        int user_id FK
+        datetime start_time
+        datetime end_time
+    }
+
+    STUDY_PLANS {
+        int plan_id PK
+        int user_id FK
+        datetime generated_at
+        string plan_content
+    }
+
+    STUDY_PLAN_ENTRIES {
+        int entry_id PK
+        int plan_id FK
+        int task_id FK
+        datetime start_time
+        datetime end_time
+        string recommendation
+    }
+
+    USERS ||--o{ COURSES : manages
+    USERS ||--o{ STUDY_AVAILABILITY : defines
+    USERS ||--o{ STUDY_PLANS : receives
+
+    COURSES ||--o{ ACADEMIC_TASKS : contains
+
+    STUDY_PLANS ||--o{ STUDY_PLAN_ENTRIES : includes
+    ACADEMIC_TASKS ||--o{ STUDY_PLAN_ENTRIES : referenced_by
+```
+
+#### ERD Description
+
+The database contains six main tables:
+
+1. **USERS:** Stores student account information, including names, email addresses, and hashed passwords.
+
+2. **COURSES:** Stores courses created by students. Each course belongs to one user, and a user can manage multiple courses.
+
+3. **ACADEMIC_TASKS:** Stores assignments and exams, including their deadlines, difficulty levels, estimated study hours, and current status. Each task belongs to one course.
+
+4. **STUDY_AVAILABILITY:** Stores the time periods when students are available to study. Each availability record belongs to one user.
+
+5. **STUDY_PLANS:** Stores generated study plans and their creation dates. Each plan belongs to one user.
+
+6. **STUDY_PLAN_ENTRIES:** Stores individual recommended study sessions within a generated plan. Each entry belongs to one study plan and references an academic task.
+
+The primary keys (PK) uniquely identify records, while foreign keys (FK) connect related tables. The user's email has a unique constraint (UK).
+
+The relationships use one-to-many cardinalities. For example, one student can have multiple courses, and one course can contain multiple assignments or exams.
+
+The `STUDY_PLAN_ENTRIES` table connects generated study sessions to their corresponding academic tasks, allowing one task to appear in multiple study plans.
+
+This database design supports the main StudySync AI features, including academic organization, task tracking, study availability, and personalized AI study planning.
