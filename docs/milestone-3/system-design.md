@@ -155,3 +155,185 @@ The `User` class represents a student account. Each user can own multiple course
 The service classes contain the application logic for authentication, task management, and study-plan generation. Repository interfaces separate the application logic from database access. The `AIStudyPlanner` interface separates AI functionality from the rest of the application, while `OpenAIStudyPlanner` represents the planned implementation using the OpenAI API.
 
 The `StudyPlanService` retrieves upcoming academic tasks and available study periods before requesting a study plan. This supports the requirement that the system verify that the required planning information is available before attempting AI generation.
+
+### Sequence Diagrams
+
+The following sequence diagrams show how the main components of StudySync AI communicate during important user actions. They include successful operations and error-handling scenarios.
+
+#### Sequence Diagram 1: User Login
+
+This diagram shows how a student logs into StudySync AI using their email and password. The backend checks the user's credentials and either allows access or returns an error message.
+
+```mermaid
+sequenceDiagram
+    actor Student
+    participant Frontend as React Frontend
+    participant AuthService
+    participant UserRepository
+    participant Database as PostgreSQL
+
+    Student->>Frontend: Enter email and password
+    Frontend->>AuthService: login(email, password)
+    AuthService->>UserRepository: findByEmail(email)
+    UserRepository->>Database: Query user by email
+    Database-->>UserRepository: User record or no result
+    UserRepository-->>AuthService: User or null
+
+    alt User exists and password is valid
+        AuthService-->>Frontend: Authentication token
+        Frontend-->>Student: Display dashboard
+    else Invalid email or password
+        AuthService-->>Frontend: Authentication error
+        Frontend-->>Student: Display login error message
+    end
+```
+
+**Sequence Diagram 1 Description**
+
+The student enters their login credentials through the React frontend. The frontend sends the login request to the authentication service, which uses the user repository to retrieve the account information from PostgreSQL.
+
+If the credentials are valid, the authentication service returns a token and the student can access the dashboard. Otherwise, the frontend displays an error message without granting access.
+
+#### Sequence Diagram 2: Add Assignment or Exam
+
+This diagram shows how a student adds a new assignment or exam to a course. The backend processes the task information, saves it to the database, and confirms whether the task was created successfully.
+
+```mermaid
+sequenceDiagram
+    actor Student
+    participant Frontend as React Frontend
+    participant TaskService
+    participant TaskRepository
+    participant Database as PostgreSQL
+
+    Student->>Frontend: Enter assignment or exam details
+    Frontend->>TaskService: createTask(userId, courseId, task)
+    TaskService->>TaskRepository: save(task)
+    TaskRepository->>Database: INSERT academic task
+    Database-->>TaskRepository: Saved task record
+    TaskRepository-->>TaskService: AcademicTask
+
+    alt Task saved successfully
+        TaskService-->>Frontend: AcademicTask
+        Frontend-->>Student: Display new assignment or exam
+    else Task could not be saved
+        TaskRepository-->>TaskService: Save error
+        TaskService-->>Frontend: Error response
+        Frontend-->>Student: Display error message
+    end
+```
+
+**Sequence Diagram 2 Description**
+
+The student enters the assignment or exam information through the React frontend, including its course, title, deadline, difficulty, and estimated study time.
+
+The `TaskService` receives the request and uses `TaskRepository` to save the academic task in PostgreSQL. If the operation succeeds, the frontend displays the newly created task. If saving fails, the student receives an error message.
+
+#### Sequence Diagram 3: Generate AI Study Plan
+
+This diagram shows how StudySync AI generates a personalized study plan using upcoming academic tasks, deadlines, difficulty levels, estimated study hours, and the student's available study time.
+
+```mermaid
+sequenceDiagram
+    actor Student
+    participant Frontend as React Frontend
+    participant StudyPlanService
+    participant TaskRepository
+    participant AvailabilityRepository
+    participant AIStudyPlanner
+    participant OpenAIStudyPlanner
+    participant OpenAI as OpenAI API
+
+    Student->>Frontend: Request personalized study plan
+    Frontend->>StudyPlanService: generateStudyPlan(userId)
+
+    StudyPlanService->>TaskRepository: getUpcomingTasks(userId)
+    TaskRepository-->>StudyPlanService: List of upcoming tasks
+
+    StudyPlanService->>AvailabilityRepository: getAvailability(userId)
+    AvailabilityRepository-->>StudyPlanService: Available study periods
+
+    StudyPlanService->>StudyPlanService: validatePlanningData(tasks, availability)
+
+    alt Required planning information is complete
+        StudyPlanService->>AIStudyPlanner: generate(tasks, availability)
+    
+        Note over AIStudyPlanner,OpenAIStudyPlanner: OpenAIStudyPlanner provides the implementation
+        OpenAIStudyPlanner->>OpenAI: HTTPS request with planning data
+        OpenAI-->>OpenAIStudyPlanner: Generated study recommendations
+        OpenAIStudyPlanner-->>AIStudyPlanner: StudyPlan
+        AIStudyPlanner-->>StudyPlanService: StudyPlan
+        StudyPlanService-->>Frontend: Generated study plan
+        Frontend-->>Student: Display personalized study plan
+    else Required planning information is missing
+        StudyPlanService-->>Frontend: Missing information response
+        Frontend-->>Student: Display required missing details
+    end
+```
+
+**Sequence Diagram 3 Description**
+
+The student requests a personalized study plan through the React frontend. The `StudyPlanService` retrieves upcoming academic tasks and study availability from the corresponding repositories.
+
+Before contacting the AI service, the system verifies that all required planning information is available, including task deadlines, difficulty levels, estimated study hours, and at least one available study period.
+
+When the required information is complete, `StudyPlanService` uses the `AIStudyPlanner` interface, implemented by `OpenAIStudyPlanner`, to request personalized recommendations from the OpenAI API.
+
+If required information is missing, the system identifies the missing details and does not attempt AI generation. This supports FR-606 from our Milestone 2 requirements.
+
+#### Sequence Diagram 4: AI Service Failure and Timeout
+
+This diagram shows how StudySync AI handles an unsuccessful AI study-plan request. The system must return an error within 10 seconds and allow students to continue using their saved academic information.
+
+```mermaid
+sequenceDiagram
+    actor Student
+    participant Frontend as React Frontend
+    participant StudyPlanService
+    participant TaskRepository
+    participant AvailabilityRepository
+    participant AIStudyPlanner
+    participant OpenAI as OpenAI API
+
+    Student->>Frontend: Request personalized study plan
+    Frontend->>StudyPlanService: generateStudyPlan(userId)
+
+    StudyPlanService->>TaskRepository: getUpcomingTasks(userId)
+    TaskRepository-->>StudyPlanService: Upcoming tasks
+
+    StudyPlanService->>AvailabilityRepository: getAvailability(userId)
+    AvailabilityRepository-->>StudyPlanService: Available study periods
+
+    StudyPlanService->>StudyPlanService: validatePlanningData(tasks, availability)
+
+    alt Required planning information is missing
+        StudyPlanService-->>Frontend: Missing information response
+        Frontend-->>Student: Show missing details
+    else Required planning information is complete
+        StudyPlanService->>AIStudyPlanner: generate(tasks, availability)
+        Note over AIStudyPlanner,OpenAI: AI request must finish or fail within 10 seconds
+        AIStudyPlanner->>OpenAI: HTTPS request for study recommendations
+
+        alt AI service fails or times out
+            OpenAI--xAIStudyPlanner: Error or timeout
+            AIStudyPlanner-->>StudyPlanService: Generation failure
+            StudyPlanService-->>Frontend: Error response
+            Frontend-->>Student: Display failure message
+        else AI service succeeds
+            OpenAI-->>AIStudyPlanner: Study recommendations
+            AIStudyPlanner-->>StudyPlanService: StudyPlan
+            StudyPlanService-->>Frontend: Generated study plan
+            Frontend-->>Student: Display study plan
+        end
+    end
+
+    Note over Student,Frontend: Saved courses, tasks, and availability remain accessible
+```
+
+**Sequence Diagram 4 Description**
+
+When a student requests an AI-generated study plan, the system first checks whether the required planning information is complete.
+
+If the information is missing, the student receives a message identifying the missing details without contacting the AI service.
+
+If the information is complete, the system sends the request to the AI planner. If the OpenAI API fails or does not respond within the 10-second limit, StudySync AI displays an error instead of an incomplete study
