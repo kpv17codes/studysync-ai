@@ -337,3 +337,44 @@ When a student requests an AI-generated study plan, the system first checks whet
 If the information is missing, the student receives a message identifying the missing details without contacting the AI service.
 
 If the information is complete, the system sends the request to the AI planner. If the OpenAI API fails or does not respond within the 10-second limit, StudySync AI displays an error instead of an incomplete study
+
+### State Diagram
+
+The following state diagram shows the lifecycle of an academic task (assignment or exam) in StudySync AI. It illustrates how a task moves between different states as the student works on it, completes it, or passes its deadline.
+
+```mermaid
+stateDiagram-v2
+    [*] --> NotStarted : Task created
+
+    NotStarted --> InProgress : Student begins working
+    NotStarted --> Completed : Student marks task complete
+    NotStarted --> Overdue : Deadline passes
+
+    InProgress --> Completed : Student finishes task
+    InProgress --> Overdue : Deadline passes
+
+    Overdue --> InProgress : Student resumes work
+    Overdue --> Completed : Student completes late task
+
+    Completed --> InProgress : Student reopens task
+
+    NotStarted --> [*] : Task deleted
+    InProgress --> [*] : Task deleted
+    Overdue --> [*] : Task deleted
+    Completed --> [*] : Task deleted
+```
+
+#### State Diagram Description
+
+The state diagram represents the possible states of an academic task in StudySync AI.
+
+- **Not Started:** The assignment or exam has been created, but the student has not started working on it.
+- **In Progress:** The student has started working on the task but has not completed it.
+- **Completed:** The student has finished the task and marked it as complete.
+- **Overdue:** The task's deadline has passed without completion.
+
+A task begins in the Not Started state when it is created. The student can move it to In Progress or Completed. If its deadline passes before completion, the task becomes Overdue.
+
+Overdue tasks can still be worked on and completed. Students can also reopen completed tasks if additional work is needed.
+
+Deleting a task ends its lifecycle, regardless of its current state.
