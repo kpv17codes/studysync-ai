@@ -468,6 +468,61 @@ The `STUDY_PLAN_ENTRIES` table connects generated study sessions to their corres
 
 This database design supports the main StudySync AI features, including academic organization, task tracking, study availability, and personalized AI study planning.
 
+### Deployment Diagram
+
+The following diagram shows the proposed deployment architecture for StudySync AI. It illustrates how the React frontend, FastAPI backend, PostgreSQL database, and external OpenAI API will communicate in a cloud-hosted environment.
+
+```mermaid
+flowchart TD
+    Student["Student / Web Browser"]
+
+    subgraph Cloud["Cloud Hosting Environment"]
+        Frontend["React + TypeScript Frontend<br/>Static Web Hosting"]
+        Backend["FastAPI Backend<br/>Python Application Server"]
+        Database[("PostgreSQL Database")]
+    end
+
+    subgraph External["External AI Service"]
+        OpenAI["OpenAI API"]
+    end
+
+    Student -->|"HTTPS"| Frontend
+    Frontend -->|"HTTPS / REST API"| Backend
+    Backend -->|"SQL / Secure Database Connection"| Database
+    Backend -->|"HTTPS / API Request"| OpenAI
+    OpenAI -->|"AI-Generated Study Plan"| Backend
+    Backend -->|"JSON Response"| Frontend
+    Frontend -->|"Display Results"| Student
+```
+
+#### Deployment Diagram Description
+
+The deployment architecture consists of the following components:
+
+1. **Student / Web Browser:** Students access StudySync AI through a web browser.
+2. **React Frontend:** The React and TypeScript application is deployed using static web hosting and provides the user interface for managing courses, assignments, exams, and study plans.
+3. **FastAPI Backend:** The Python FastAPI application is deployed on a cloud application server. It handles authentication, academic data management, study-plan generation, and communication with external services.
+4. **PostgreSQL Database:** The database stores student accounts, courses, academic tasks, study availability, and generated study plans.
+5. **OpenAI API:** The external AI service processes validated academic information and generates personalized study-plan recommendations.
+
+#### Communication and Security
+
+- Communication between the student's browser, frontend, and backend uses HTTPS.
+- The backend communicates with PostgreSQL through a secure database connection.
+- The OpenAI API is accessed by the backend using HTTPS, keeping API credentials out of the frontend.
+- Student passwords are stored as secure password hashes rather than plaintext.
+- JWT authentication is used to protect authenticated API requests.
+- Environment variables are used to manage database credentials, API keys, and other sensitive configuration.
+
+#### Deployment Strategy
+
+The proposed deployment will use cloud hosting for the React frontend and FastAPI backend, along with a managed PostgreSQL database.
+
+Docker will be used to package the backend application for consistent deployment across environments. GitHub Actions will support automated testing and deployment workflows.
+
+The final cloud hosting provider and production configuration will be selected during implementation.
+
+This deployment design supports the application's scalability, maintainability, security, and availability requirements.
 ### AI Pipeline Diagram
 
 The following diagram illustrates how StudySync AI generates personalized study plans using student academic information and an external AI service. It includes data collection, validation, AI processing, and fallback behavior when required information is missing or the AI service fails.
