@@ -467,3 +467,50 @@ The relationships use one-to-many cardinalities. For example, one student can ha
 The `STUDY_PLAN_ENTRIES` table connects generated study sessions to their corresponding academic tasks, allowing one task to appear in multiple study plans.
 
 This database design supports the main StudySync AI features, including academic organization, task tracking, study availability, and personalized AI study planning.
+
+### AI Pipeline Diagram
+
+The following diagram illustrates how StudySync AI generates personalized study plans using student academic information and an external AI service. It includes data collection, validation, AI processing, and fallback behavior when required information is missing or the AI service fails.
+
+```mermaid
+flowchart TD
+    A["Student requests AI study plan"] --> B["React frontend sends request"]
+    B --> C["FastAPI StudyPlanService"]
+    C --> D["Retrieve upcoming academic tasks"]
+    D --> E["Retrieve study availability"]
+    E --> F{"Required planning data complete?"}
+
+    F -->|No| G["Return missing information message"]
+    G --> H["Student updates academic information"]
+
+    F -->|Yes| I["Prepare AI planning request"]
+    I --> J["AIStudyPlanner / OpenAIStudyPlanner"]
+    J --> K["OpenAI API"]
+
+    K --> L{"Valid response within 10 seconds?"}
+    L -->|Yes| M["Validate generated study plan"]
+    M --> N{"Plan valid?"}
+    N -->|Yes| O["Save study plan to PostgreSQL"]
+    O --> P["Return personalized study plan"]
+    P --> Q["Display plan in React frontend"]
+
+    N -->|No| R["Return AI generation failure message"]
+    L -->|No| R
+    R --> S["Keep existing academic data unchanged"]
+    S --> T["Student can retry later"]
+```
+
+#### AI Pipeline Description
+
+The AI study-plan generation process follows these steps:
+
+1. **Student Request:** The student requests a personalized study plan through the React frontend.
+2. **Data Retrieval:** The FastAPI backend retrieves upcoming academic tasks and the student's available study periods from PostgreSQL.
+3. **Data Validation:** The system checks that all required information is present, including task deadlines, difficulty levels, estimated study hours, and at least one available study period.
+4. **Missing Information:** If any required information is missing, the system displays a message asking the student to complete it without calling the AI service.
+5. **AI Processing:** When the required information is complete, the backend prepares the planning request and sends it through the AIStudyPlanner interface to the OpenAI API.
+6. **Response Validation:** The system checks whether the AI service returned a usable study plan within the 10-second limit.
+7. **Successful Generation:** A valid study plan is saved in PostgreSQL and displayed to the student.
+8. **Failure Handling:** If the AI service times out, fails, or returns an invalid plan, the system displays an error message while preserving previously saved academic information.
+
+This pipeline supports the functional requirements for AI study-plan readiness and fallback behavior, as well as the nonfunctional requirements for response time and data preservation.
