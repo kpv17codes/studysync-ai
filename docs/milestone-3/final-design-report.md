@@ -7,10 +7,11 @@
 **Milestone:** 3 – Formal Analysis & Design  
 **Course:** COMP 425 – Software Engineering  
 **University:** Southwest Minnesota State University  
-**Team Members:** Kiamely Pereyra Villar and Massiel  
+**Team Members:** Kiamely Pereyra and Massiel Montero
+
 **Submission Date:** October 23, 2026  
 **GitHub Repository:** https://github.com/kpv17codes/studysync-ai  
-**GitHub Milestone Tag:** To be created before submission
+**GitHub Milestone Tag:** `milestone-3`
 
 **Team Responsibilities:**
 - Kiamely Pereyra: System design, class relationships, state diagram, AI pipeline, documentation, and peer review.
