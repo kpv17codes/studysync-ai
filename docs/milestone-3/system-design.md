@@ -5,22 +5,25 @@
 
 The following diagram shows the high-level architecture of StudySync AI and the communication between the main system components.
 
+
 ```mermaid
 flowchart TB
-    User["👤 Student Browser"]
+    User["Student / Web Browser"]
 
-    subgraph Cloud["☁️ Cloud Host"]
+    subgraph Cloud["Cloud Hosting Environment"]
         Frontend["React + TypeScript SPA"]
+        Backend["FastAPI REST API"]
+        Database[("PostgreSQL Database")]
     end
 
-    Backend["FastAPI REST API"]
-    Database[("PostgreSQL<br/>Relational Database")]
-    AI["OpenAI API<br/>AI Study Planner"]
+    subgraph External["External AI Service"]
+        AI["OpenAI API"]
+    end
 
-    User -->|HTTPS| Frontend
-    Frontend -->|HTTPS / JSON| Backend
-    Backend -->|SQL| Database
-    Backend -->|HTTPS| AI
+    User -->|"HTTPS"| Frontend
+    Frontend -->|"HTTPS / JSON"| Backend
+    Backend -->|"SQL / Secure Connection"| Database
+    Backend -->|"HTTPS / AI Requests"| AI
 ```
 
 ### Architecture Description
@@ -63,6 +66,7 @@ classDiagram
         -date deadline
         -int difficulty
         -float estimatedHours
+        -string status
         +createTask() AcademicTask
         +updateTask() AcademicTask
         +deleteTask() bool
@@ -85,6 +89,16 @@ classDiagram
         -string planContent
         +generatePlan() StudyPlan
     }
+
+    class StudyPlanEntry {
+        -int id
+        -int planId
+        -int taskId
+        -datetime startTime
+        -datetime endTime
+        -string recommendation
+    }
+
 
     class AuthService {
         +login(string email, string password) string
@@ -136,6 +150,10 @@ classDiagram
     Course "1" *-- "0..*" AcademicTask : contains
     User "1" *-- "0..*" StudyAvailability : defines
     User "1" *-- "0..*" StudyPlan : receives
+    
+    StudyPlan "1" *-- "0..*" StudyPlanEntry : contains
+    AcademicTask "1" --> "0..*" StudyPlanEntry : referenced by
+
 
     AuthService --> UserRepository : uses
     TaskService --> TaskRepository : uses
