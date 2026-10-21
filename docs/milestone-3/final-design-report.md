@@ -236,7 +236,7 @@ classDiagram
 
     AIStudyPlanner <|.. OpenAIStudyPlanner : implements
 
-    TaskService ..> AcademicTask : creates and updates
+   TaskService ..> AcademicTask : manages
 ```
 #### 5.2 State Diagram
 The following state diagram shows the lifecycle of an academic task (assignment or exam) in StudySync AI. It illustrates how a task moves between different states as the student works on it, completes it, or passes its deadline.
@@ -464,182 +464,61 @@ If the information is complete, the system sends the request to the AI planner. 
 
 #### 7.1 Entity Relationship Diagram (ERD)
 
-Entity Relationship Diagram (ERD)
 The following ERD shows the proposed PostgreSQL database structure for StudySync AI. It includes student accounts, courses, academic tasks, study availability, generated study plans, and individual study-plan entries.
 
-manages
 
-defines
-
-receives
-
-contains
-
-includes
-
-referenced_by
-
-USERS
-
-int
-
-user_id
-
-PK
-
-string
-
-name
-
-string
-
-email
-
-UK
-
-string
-
-password_hash
-
-COURSES
-
-int
-
-course_id
-
-PK
-
-int
-
-user_id
-
-FK
-
-string
-
-name
-
-string
-
-code
-
-ACADEMIC_TASKS
-
-int
-
-task_id
-
-PK
-
-int
-
-course_id
-
-FK
-
-string
-
-title
-
-string
-
-task_type
-
-date
-
-deadline
-
-int
-
-difficulty
-
-float
-
-estimated_hours
-
-string
-
-status
-
-STUDY_AVAILABILITY
-
-int
-
-availability_id
-
-PK
-
-int
-
-user_id
-
-FK
-
-datetime
-
-start_time
-
-datetime
-
-end_time
-
-STUDY_PLANS
-
-int
-
-plan_id
-
-PK
-
-int
-
-user_id
-
-FK
-
-datetime
-
-generated_at
-
-string
-
-plan_content
-
-STUDY_PLAN_ENTRIES
-
-int
-
-entry_id
-
-PK
-
-int
-
-plan_id
-
-FK
-
-int
-
-task_id
-
-FK
-
-datetime
-
-start_time
-
-datetime
-
-end_time
-
-string
-
-recommendation
-
-
-
-
+```mermaid
+erDiagram
+    USERS ||--o{ COURSES : manages
+    USERS ||--o{ STUDY_AVAILABILITY : defines
+    USERS ||--o{ STUDY_PLANS : receives
+    COURSES ||--o{ ACADEMIC_TASKS : contains
+    STUDY_PLANS ||--o{ STUDY_PLAN_ENTRIES : includes
+    ACADEMIC_TASKS ||--o{ STUDY_PLAN_ENTRIES : referenced_by
+
+    USERS {
+        int user_id PK
+        string name
+        string email UK
+        string password_hash
+    }
+    COURSES {
+        int course_id PK
+        int user_id FK
+        string name
+        string code
+    }
+    ACADEMIC_TASKS {
+        int task_id PK
+        int course_id FK
+        string title
+        string task_type
+        date deadline
+        int difficulty
+        float estimated_hours
+        string status
+    }
+    STUDY_AVAILABILITY {
+        int availability_id PK
+        int user_id FK
+        datetime start_time
+        datetime end_time
+    }
+    STUDY_PLANS {
+        int plan_id PK
+        int user_id FK
+        datetime generated_at
+        string plan_content
+    }
+    STUDY_PLAN_ENTRIES {
+        int entry_id PK
+        int plan_id FK
+        int task_id FK
+        datetime start_time
+        datetime end_time
+        string recommendation
+    }
+```
 
 ERD Description
 The database contains six main tables:
