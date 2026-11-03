@@ -1,5 +1,6 @@
 
 from fastapi import FastAPI
+
 from app.tasks import router as tasks_router
 
 app = FastAPI(title="StudySync AI")
