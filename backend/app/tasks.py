@@ -15,7 +15,7 @@ class Task(TaskCreate):
     id: int
 
 
-tasks = []
+tasks: list[Task] = []
 
 
 @router.post("/", response_model=Task, status_code=201)
