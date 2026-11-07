@@ -64,3 +64,65 @@ flowchart LR
 ## Project Status
 
 Currently developing the project proposal and opportunity study for Milestone 1.
+
+## Local PostgreSQL Setup
+
+The backend uses PostgreSQL to store tasks permanently.
+
+### Requirements
+
+- Python 3.12
+- Docker Desktop
+- PostgreSQL runs through Docker Compose
+
+### Setup
+
+1. Copy `.env.example` to a new file named `.env`.
+2. Replace `replace_with_your_local_password` in both variables with the same local password.
+3. Start Docker Desktop.
+4. From the project root, start PostgreSQL:
+
+   ```bash
+   docker compose up -d db
+   ```
+
+5. Install the backend dependencies:
+
+   ```bash
+   cd backend
+   python -m pip install -r requirements.txt
+   ```
+
+6. Create the database tables:
+
+   ```bash
+   python -c "from app.database import Base, engine; import app.models; Base.metadata.create_all(bind=engine)"
+   ```
+
+7. Start the backend:
+
+   ```bash
+   python -m uvicorn app.main:app
+   ```
+
+8. Open http://127.0.0.1:8000/docs to test the API.
+
+### Running Tests
+
+From the `backend` folder:
+
+```bash
+python -m pytest -q
+```
+
+Tests use an isolated SQLite database, so they do not modify the PostgreSQL task data.
+
+### Database Persistence
+
+PostgreSQL uses a Docker volume to preserve data between container restarts.
+
+To stop the database without deleting its data:
+
+```bash
+docker compose down
+```

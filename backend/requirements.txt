@@ -23,3 +23,6 @@ typing_extensions==4.16.0
 uvicorn==0.54.0
 ruff==0.17.3
 mypy==2.4.1
+sqlalchemy>=2.0,<3.0
+psycopg[binary]>=3.2,<4.0
+python-dotenv>=1.0,<2.0
