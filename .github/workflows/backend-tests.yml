@@ -27,4 +27,6 @@ jobs:
 
       - name: Run automated tests
         working-directory: backend
+        env:
+          STUDYSYNC_TESTING: "1"
         run: python -m pytest -v
