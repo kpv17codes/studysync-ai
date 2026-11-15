@@ -61,68 +61,74 @@ flowchart LR
 * Kiamely Pereyra 
 * Massiel Montero
 
+
 ## Project Status
 
-Currently developing the project proposal and opportunity study for Milestone 1.
+Milestone 4 — Core MVP implementation.
 
-## Local PostgreSQL Setup
+The current MVP allows students to create academic tasks, view saved tasks, and track assignment deadlines. Tasks are stored in PostgreSQL through a FastAPI backend and displayed in the React frontend.
 
-The backend uses PostgreSQL to store tasks permanently.
+AI-generated study plans, authentication, and additional academic planning features are planned for future milestones.
+
+## Running the Application with Docker
 
 ### Requirements
 
-- Python 3.12
 - Docker Desktop
-- PostgreSQL runs through Docker Compose
+- Git
 
 ### Setup
 
-1. Copy `.env.example` to a new file named `.env`.
-2. Replace `replace_with_your_local_password` in both variables with the same local password.
-3. Start Docker Desktop.
-4. From the project root, start PostgreSQL:
-
-   ```bash
-   docker compose up -d db
-   ```
-
-5. Install the backend dependencies:
-
-   ```bash
-   cd backend
-   python -m pip install -r requirements.txt
-   ```
-
-6. Create the database tables:
-
-   ```bash
-   python -c "from app.database import Base, engine; import app.models; Base.metadata.create_all(bind=engine)"
-   ```
-
-7. Start the backend:
-
-   ```bash
-   python -m uvicorn app.main:app
-   ```
-
-8. Open http://127.0.0.1:8000/docs to test the API.
-
-### Running Tests
-
-From the `backend` folder:
+1. Clone the repository.
+2. Copy `.env.example` to `.env`.
+3. Replace the placeholder password with a local password.
+4. Start Docker Desktop.
+5. From the project root, run:
 
 ```bash
-python -m pytest -q
+docker compose up --build
 ```
 
-Tests use an isolated SQLite database, so they do not modify the PostgreSQL task data.
+### Application URLs
 
-### Database Persistence
+- Frontend: http://localhost:5173/
+- Backend API documentation: http://localhost:8000/docs
+- Health check: http://localhost:8000/health
 
-PostgreSQL uses a Docker volume to preserve data between container restarts.
-
-To stop the database without deleting its data:
+### Stop the Application
 
 ```bash
 docker compose down
 ```
+
+PostgreSQL data persists in a Docker volume.
+
+## Testing
+
+From the `backend` directory, run:
+
+```bash
+python -m pytest tests -v
+python -m ruff check .
+python -m mypy --explicit-package-bases app
+```
+
+The backend currently has 13 automated tests covering API functionality, input validation, and task operations.
+
+Manual testing results are documented in `docs/milestone-4/manual-tests.md`.
+
+## Project Structure
+
+- `frontend/` — React and TypeScript application
+- `backend/app/` — FastAPI application, database models, and API routes
+- `backend/tests/` — Automated backend tests
+- `docs/` — Requirements, architecture, and milestone documentation
+- `compose.yaml` — Docker Compose configuration
+- `.env.example` — Environment variable template
+
+## Current Limitations
+
+- AI-generated study plans are not yet implemented.
+- Authentication is planned for a future milestone.
+- Additional features and testing will be developed in Milestones 5 and 6.
+
