@@ -117,6 +117,23 @@ The backend currently has 13 automated tests covering API functionality, input v
 
 Manual testing results are documented in `docs/milestone-4/manual-tests.md`.
 
+
+### Run All Backend Checks
+
+From the project root, run this command in PowerShell:
+
+```powershell
+.\run-tests.ps1
+```
+
+This runs:
+- 13 automated tests using Pytest
+- Code quality checks using Ruff
+- Type checking using Mypy
+
+All checks must pass before merging changes.
+
+
 ## Project Structure
 
 - `frontend/` — React and TypeScript application
