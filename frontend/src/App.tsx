@@ -1,5 +1,5 @@
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import './App.css'
 
 type Task = {
@@ -9,28 +9,58 @@ type Task = {
   due_date: string
 }
 
+const API_URL = 'http://localhost:8000'
+
 function App() {
   const [tasks, setTasks] = useState<Task[]>([])
   const [title, setTitle] = useState('')
   const [course, setCourse] = useState('')
   const [dueDate, setDueDate] = useState('')
+  const [error, setError] = useState('')
 
-  function addTask(event: React.FormEvent<HTMLFormElement>) {
+  useEffect(() => {
+    async function loadTasks() {
+      try {
+        const response = await fetch(`${API_URL}/tasks/`)
+        if (!response.ok) throw new Error('Could not load tasks')
+        setTasks(await response.json())
+      } catch {
+        setError('Unable to load tasks. Please try again.')
+      }
+    }
+    void loadTasks()
+  }, [])
+
+  async function addTask(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault()
+    setError('')
 
-    if (!title.trim() || !course.trim() || !dueDate) return
-
-    const newTask: Task = {
-      id: Date.now(),
-      title: title.trim(),
-      course: course.trim(),
-      due_date: dueDate,
+    if (!title.trim() || !course.trim() || !dueDate) {
+      setError('Please complete all fields.')
+      return
     }
 
-    setTasks([...tasks, newTask])
-    setTitle('')
-    setCourse('')
-    setDueDate('')
+    try {
+      const response = await fetch(`${API_URL}/tasks/`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          title: title.trim(),
+          course: course.trim(),
+          due_date: dueDate,
+        }),
+      })
+
+      if (!response.ok) throw new Error('Could not save task')
+
+      const newTask: Task = await response.json()
+      setTasks((previous) => [...previous, newTask])
+      setTitle('')
+      setCourse('')
+      setDueDate('')
+    } catch {
+      setError('Unable to save task. Please try again.')
+    }
   }
 
   return (
@@ -72,6 +102,7 @@ function App() {
 
           <button type="submit">Add Task</button>
         </form>
+        {error && <p role="alert">{error}</p>}
       </section>
 
       <section>
